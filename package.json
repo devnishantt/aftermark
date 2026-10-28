@@ -1,0 +1,36 @@
+{
+  "name": "aftermark",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Evidence-driven incident response with independent approval gates and verifiable audit trails",
+  "type": "module",
+  "engines": {
+    "bun": ">=1.3.0",
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/server.ts",
+    "build": "bun build src/server.ts --target=bun --outdir=dist --sourcemap=external",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "db:migrate": "bun scripts/migrate.ts",
+    "check": "bun run typecheck && bun test && bun run build"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.3.1",
+    "@fastify/helmet": "^13.2.0",
+    "@fastify/rate-limit": "^11.2.1",
+    "@fastify/swagger": "^9.9.2",
+    "@fastify/swagger-ui": "^6.1.2",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "bun": "^1.4.4",
+    "typescript": "^7.0.2"
+  }
+}
