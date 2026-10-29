@@ -16,6 +16,7 @@
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "db:migrate": "bun scripts/migrate.ts",
+    "demo": "bun scripts/demo.ts",
     "check": "bun run typecheck && bun test && bun run build"
   },
   "dependencies": {
