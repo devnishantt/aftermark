@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "bun --watch src/server.ts",
     "start": "bun src/server.ts",
-    "build": "bun build src/server.ts --target=bun --outdir=dist --sourcemap=external",
+    "build": "bun build src/server.ts --target=bun --packages=external --outdir=dist --sourcemap=external",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
