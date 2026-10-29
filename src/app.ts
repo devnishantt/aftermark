@@ -6,6 +6,7 @@ import type { Config } from './core/config'
 import { AppError, StorageError } from './core/errors'
 import type { Database } from './db/database'
 import { registerRoutes } from './modules/routes'
+import { harden } from './core/security'
 
 export async function createApp(config: Config, db: Database) {
   const app = Fastify({
@@ -32,7 +33,7 @@ export async function createApp(config: Config, db: Database) {
       message = error.conflict ? 'Write conflict; refetch the latest revision before retrying' : 'Storage is temporarily unavailable'
     } else if (hasZodFastifySchemaValidationErrors(error)) {
       status = 400; code = 'VALIDATION_ERROR'; message = 'Request does not match the documented schema'
-    } else if (typeof error.statusCode === 'number' && error.statusCode >= 400 && error.statusCode < 500) {
+    } else if (error instanceof Error && 'statusCode' in error && typeof error.statusCode === 'number' && error.statusCode >= 400 && error.statusCode < 500) {
       status = error.statusCode
       code = status === 429 ? 'RATE_LIMITED' : 'INVALID_REQUEST'
       message = status === 429 ? 'Too many requests; wait before retrying' : 'Invalid request'
@@ -43,6 +44,7 @@ export async function createApp(config: Config, db: Database) {
   })
   app.setNotFoundHandler((request, reply) => reply.code(404).send({ error: { code: 'NOT_FOUND', message: 'Route not found', requestId: request.id } }))
 
+  await harden(app, config)
   await app.register(swagger, {
     openapi: {
       info: { title: 'Aftermark API', version: '1.0.0', description: 'Evidence-driven incident response with independent approval gates. Send API keys as Bearer tokens. Mutations require the current expectedRevision.' },
